@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Weather App Map</title>
+    <link href="/src/styles.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <style>
+      /* Optional: Custom styles for map container */
+      #map {
+        height: calc(
+          100vh - 40px
+        ); /* Full viewport height for map, leaving space for button */
+        width: 100%; /* Full width */
+      }
+
+      /* Optional: Adjust back button styles */
+      #backButtonContainer {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000; /* Ensure button is above map */
+      }
+
+      #backButton {
+        padding: 8px 16px;
+        background-color: #4299e1;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      #backButton:hover {
+        background-color: #3182ce;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-blue-200 text-gray-800 min-h-screen flex flex-col items-center justify-center"
+  >
+    <!-- Leaflet Map Container -->
+    <div id="map"></div>
+
+    <!-- Back Button -->
+    <div id="backButtonContainer">
+      <a href="/index.html" id="backButton"> Back </a>
+    </div>
+
+    <!-- Leaflet JavaScript -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <!-- Initialize Leaflet map -->
+    <script>
+      // Initialize map
+      var map = L.map("map").setView([51.505, -0.09], 13);
+
+      // Add OpenStreetMap tiles
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution:
+          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(map);
+    </script>
+  </body>
+</html>
