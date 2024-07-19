@@ -121,25 +121,21 @@ async function renderCityList() {
 
       const cityCard = document.createElement("div");
       cityCard.className =
-        "city-card p-6 bg-blue-800 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition";
+        "city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition";
       cityCard.innerHTML = `
              <div class="flex items-center justify-between w-full">
           <div class="flex flex-col items-start">
-            <h2 class="text-3xl text-white font-extrabold mb-2">${
-              city.name
-            }</h2>
-            <p class="text-lg text-gray-400 mb-2">${currentDate}</p>
+            <h2 class="text-3xl font-extrabold mb-2">${city.name}</h2>
+            <p class="text-lg text-white mb-2">${currentDate}</p>
             <div class="flex items-center mb-2">
-              <div class="text-3xl text-white font-extrabold mr-2">${
+              <div class="text-3xl font-extrabold mr-2">${
                 weatherData.temperature
               }°C</div>
             </div>
-            <p class="text-lg text-white mb-2">${
+            <p class="text-lg mb-2">${
               weatherDescriptions[weatherData.weathercode]
             }</p>
-            <p class="text-lg text-white">Windspeed: ${
-              weatherData.windspeed
-            } m/s</p>
+            <p class="text-lg">Windspeed: ${weatherData.windspeed} m/s</p>
           </div>
           <img src="${weatherIcon}" alt="Weather icon" class="w-20 h-20" />
         </div>
