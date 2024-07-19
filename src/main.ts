@@ -98,7 +98,10 @@ function formatDay(date: Date): string {
 
 async function renderCityList() {
   const cityListElement = document.getElementById("cityList");
-  if (!cityListElement) return;
+  const loadingIndicator = document.getElementById("loadingIndicator");
+  if (!cityListElement || !loadingIndicator) return;
+
+  loadingIndicator.classList.remove("hidden");
 
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -148,6 +151,7 @@ async function renderCityList() {
       cityListElement.appendChild(cityCard);
     }
   }
+  loadingIndicator.classList.add("hidden");
 }
 
 async function showWeeklyForecast(
@@ -157,10 +161,14 @@ async function showWeeklyForecast(
 ) {
   const cityListElement = document.getElementById("cityList");
   const weeklyForecastElement = document.getElementById("weeklyForecast");
-  if (!cityListElement || !weeklyForecastElement) return;
+  const loadingIndicator = document.getElementById("loadingIndicator");
+
+  if (!cityListElement || !weeklyForecastElement || !loadingIndicator) return;
 
   cityListElement.classList.add("hidden");
   weeklyForecastElement.classList.remove("hidden");
+
+  loadingIndicator.classList.remove("hidden");
 
   const backButton = document.getElementById("backButton");
   if (backButton) {
@@ -218,8 +226,19 @@ async function showWeeklyForecast(
 
     forecastElement.innerHTML = forecastHtml;
   }
+  loadingIndicator.classList.add("hidden");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderCityList();
+document.addEventListener("DOMContentLoaded", async () => {
+  const loadingIndicator = document.getElementById("loadingIndicator");
+
+  if (loadingIndicator) {
+    loadingIndicator.classList.remove("hidden"); // Show loading indicator
+  }
+
+  await renderCityList(); // Fetch and display city data
+
+  if (loadingIndicator) {
+    loadingIndicator.classList.add("hidden"); // Hide loading indicator
+  }
 });

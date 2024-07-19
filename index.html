@@ -13,6 +13,19 @@
   <body
     class="bg-blue-200 text-gray-800 min-h-screen flex flex-col items-center justify-center"
   >
+    <!-- Loading Indicator -->
+    <div
+      id="loadingIndicator"
+      class="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-75 z-50"
+    >
+      <div class="flex items-center space-x-2">
+        <div
+          class="w-8 h-8 border-4 border-t-4 border-blue-500 border-opacity-50 border-solid rounded-full animate-spin"
+        ></div>
+        <p class="text-lg text-gray-700">Loading...</p>
+      </div>
+    </div>
+
     <!-- Header with Search Bar -->
     <header class="w-full bg-blue-950 p-4 flex items-center justify-between">
       <h1 class="text-4xl font-extrabold text-white">Weather App</h1>
