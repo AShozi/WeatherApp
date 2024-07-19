@@ -16,22 +16,18 @@
       crossorigin=""
     />
     <style>
-      /* Optional: Custom styles for map container */
       #map {
         height: calc(
           100vh - 40px
         ); /* Full viewport height for map, leaving space for button */
         width: 100%; /* Full width */
       }
-
-      /* Optional: Adjust back button styles */
       #backButtonContainer {
         position: fixed;
         top: 20px;
         left: 20px;
         z-index: 1000; /* Ensure button is above map */
       }
-
       #backButton {
         padding: 8px 16px;
         background-color: #4299e1;
@@ -41,7 +37,6 @@
         cursor: pointer;
         transition: background-color 0.3s ease;
       }
-
       #backButton:hover {
         background-color: #3182ce;
       }
@@ -55,7 +50,7 @@
 
     <!-- Back Button -->
     <div id="backButtonContainer">
-      <a href="/index.html" id="backButton"> Back </a>
+      <a href="/index.html" id="backButton">Back</a>
     </div>
 
     <!-- Leaflet JavaScript -->
@@ -76,6 +71,36 @@
         attribution:
           '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(map);
+
+      // Function to parse URL parameters
+      function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+      }
+
+      // Get cities data from URL
+      const citiesData = getQueryParam("cities");
+      console.log("Cities data from URL:", citiesData); // Check if citiesData is retrieved correctly
+
+      if (citiesData) {
+        try {
+          const cities = JSON.parse(decodeURIComponent(citiesData));
+          console.log("Parsed cities data:", cities); // Check the parsed data
+
+          // Add markers for each city
+          cities.forEach((city) => {
+            L.marker([city.latitude, city.longitude])
+              .addTo(map)
+              .bindPopup(
+                `<b>${city.name}</b><br>Lat: ${city.latitude}, Lon: ${city.longitude}`
+              );
+          });
+        } catch (error) {
+          console.error("Failed to parse city data from URL:", error);
+        }
+      } else {
+        console.error("No cities data found in URL");
+      }
     </script>
   </body>
 </html>
