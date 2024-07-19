@@ -1,92 +1,13 @@
 import {
   fetchCurrentWeather,
   fetchWeeklyWeather,
-  cities,
-  CurrentWeatherData,
-  WeeklyWeatherData,
-  getPlaces, // Importing getPlaces function
+  getPlaces,
   addToPlaces,
   removePlace,
 } from "./api";
-
-const weatherDescriptions: { [key: number]: string } = {
-  0: "Clear sky",
-  1: "Mainly clear",
-  2: "Partly cloudy",
-  3: "Overcast",
-  45: "Fog",
-  48: "Depositing rime fog",
-  51: "Light drizzle",
-  53: "Moderate drizzle",
-  55: "Dense drizzle",
-  56: "Light freezing drizzle",
-  57: "Dense freezing drizzle",
-  61: "Slight rain",
-  63: "Moderate rain",
-  65: "Heavy rain",
-  66: "Light freezing rain",
-  67: "Heavy freezing rain",
-  71: "Slight snow fall",
-  73: "Moderate snow fall",
-  75: "Heavy snow fall",
-  77: "Snow grains",
-  80: "Slight rain showers",
-  81: "Moderate rain showers",
-  82: "Violent rain showers",
-  85: "Slight snow showers",
-  86: "Heavy snow showers",
-  95: "Slight or moderate thunderstorm",
-  96: "Thunderstorm with slight hail",
-  99: "Thunderstorm with heavy hail",
-};
-
-function getWeatherIcon(weatherCode: number): string {
-  switch (weatherCode) {
-    case 0:
-      return "./assets/sun.png";
-    case 1:
-    case 2:
-    case 3:
-      return "./assets/partly-cloudy.png";
-    case 45:
-    case 48:
-      return "./assets/cloud.png";
-    case 51:
-    case 53:
-    case 55:
-      return "./assets/rain.png";
-    case 56:
-    case 57:
-      return "./assets/rain.png";
-    case 61:
-    case 63:
-    case 65:
-      return "./assets/rainy-day.png";
-    case 66:
-    case 67:
-      return "./assets/rain freeze.png";
-    case 71:
-    case 73:
-    case 75:
-      return "./assets/snowy.png";
-    case 77:
-      return "./assets/snowy grains.png";
-    case 80:
-    case 81:
-    case 82:
-      return "./assets/rainy shower.png";
-    case 85:
-    case 86:
-      return "./assets/snow.png";
-    case 95:
-      return "./assets/storm.png";
-    case 96:
-    case 99:
-      return "./assets/hail.png";
-    default:
-      return "./assets/sun.png";
-  }
-}
+import { ILocation } from "./types/weatherTypes";
+import { cities } from "./utils/cityList";
+import { getWeatherIcon, weatherDescriptions } from "./utils/weatherConstants";
 
 function formatDay(date: Date): string {
   const today = new Date();
@@ -112,66 +33,55 @@ async function renderCityList() {
     month: "long",
     day: "numeric",
   });
+  const cityDateElements = document.getElementsByClassName("current-date");
+  const cityElements = document.getElementsByClassName("city-card");
+  const weatherDataTempElements = document.getElementsByClassName("card-temp");
+  const weatherWsElements = document.getElementsByClassName("card-wind ");
+  const weatherDescElements = document.getElementsByClassName("card-desc ");
+  const weatherIconElements = document.getElementsByClassName("card-icon");
 
-  for (const city of cities) {
+  for (let i: number = 0; i < cities.length; i++) {
+    const city = cities[i];
+    const cityCard = cityElements[i];
+
+    cityDateElements[i].innerHTML = `${currentDate}`;
     const weatherData = await fetchCurrentWeather(
       city.latitude,
       city.longitude
     );
 
     if (weatherData) {
+      weatherDataTempElements[i].innerHTML = `${weatherData.temperature}°C`;
+      weatherDataTempElements[
+        i
+      ].innerHTML = `Windspeed: ${weatherData.windspeed} m/s`;
       const weatherIcon = getWeatherIcon(weatherData.weathercode);
-
-      const cityCard = document.createElement("div");
-      cityCard.className =
-        "city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition";
-      cityCard.innerHTML = `
-     <div class="flex items-center justify-between w-full">
-          <div class="flex flex-col items-start">
-            <h2 class="text-3xl font-extrabold mb-2">${city.name}</h2>
-            <p class="text-lg text-white mb-2">${currentDate}</p>
-            <div class="flex items-center mb-2">
-              <div class="text-3xl font-extrabold mr-2">${
-                weatherData.temperature
-              }°C</div>
-            </div>
-            <p class="text-lg mb-2">${
-              weatherDescriptions[weatherData.weathercode]
-            }</p>
-            <p class="text-lg">Windspeed: ${weatherData.windspeed} m/s</p>
-            <!-- Save Button -->
-            <button
-              class="save-button mt-2 px-4 py-2 bg-green-400 text-white rounded hover:bg-green-300 transition"
-              data-city-name="${city.name}"
-            >
-              Save
-            </button>
-          </div>
-          <img src="${weatherIcon}" alt="Weather icon" class="w-20 h-20" />
-        </div>
-
-      `;
-      cityCard.addEventListener("click", () =>
-        showWeeklyForecast(city.name, city.latitude, city.longitude)
-      );
-      cityListElement.appendChild(cityCard);
+      weatherIconElements[i].setAttribute("src", `${weatherIcon} `);
+      cityCard.addEventListener("click", () => {
+        showWeeklyForecast(city.name, city.latitude, city.longitude);
+      });
     }
   }
-  // Add event listener for save buttons
+
   document.querySelectorAll(".save-button").forEach((button) => {
     button.addEventListener("click", (event) => {
       const cityName = (event.target as HTMLButtonElement).dataset.cityName;
       if (cityName) {
         const city = cities.find((city) => city.name === cityName);
+        if (!city) return;
+        const cityData: ILocation = {
+          latitude: city.latitude,
+          locationName: city.name,
+          longitude: city.longitude,
+        };
         if (city) {
-          addToPlaces(city);
+          addToPlaces(cityData);
           alert(`${cityName} has been saved!`);
         }
       }
     });
   });
-  // loadingIndicator.classList.add("hidden");
-  // Render cities from local storage at the bottom with different styling
+
   const places = getPlaces();
   for (const place of places) {
     const weatherData = await fetchCurrentWeather(
@@ -188,7 +98,9 @@ async function renderCityList() {
       cityCard.innerHTML = `
           <div class="flex items-center justify-between w-full">
             <div class="flex flex-col items-start">
-              <h2 class="text-3xl font-extrabold mb-2">${place.name}</h2>
+              <h2 class="text-3xl font-extrabold mb-2">${
+                place.locationName
+              }</h2>
               <p class="text-lg text-white mb-2">${currentDate}</p>
               <div class="flex items-center mb-2">
                 <div class="text-3xl font-extrabold mr-2">${
@@ -204,9 +116,11 @@ async function renderCityList() {
           </div>
         `;
       cityCard.addEventListener("click", () =>
-        showWeeklyForecast(place.name, place.latitude, place.longitude)
+        showWeeklyForecast(place.locationName, place.latitude, place.longitude)
       );
-      cityListElement.appendChild(cityCard);
+      const savedSection = document.getElementById("savedCitiesSection");
+      if (!savedSection) return;
+      savedSection.appendChild(cityCard);
     }
   }
 
@@ -288,16 +202,22 @@ async function showWeeklyForecast(
   loadingIndicator.classList.add("hidden");
 }
 
+function navigateToMap() {
+  window.location.href = "path/to/your/map.html";
+}
+
+document.getElementById("map")?.addEventListener("click", navigateToMap);
+
 document.addEventListener("DOMContentLoaded", async () => {
   const loadingIndicator = document.getElementById("loadingIndicator");
 
   if (loadingIndicator) {
-    loadingIndicator.classList.remove("hidden"); // Show loading indicator
+    loadingIndicator.classList.remove("hidden");
   }
 
-  await renderCityList(); // Fetch and display city data
+  await renderCityList();
 
   if (loadingIndicator) {
-    loadingIndicator.classList.add("hidden"); // Hide loading indicator
+    loadingIndicator.classList.add("hidden");
   }
 });

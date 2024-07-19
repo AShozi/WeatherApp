@@ -29,9 +29,9 @@
       </div>
     </div>
 
-    <!-- Header with Search Bar -->
-    <header class="w-full bg-blue-250 p-4 flex items-center justify-between">
-      <h1 class="text-4xl font-extrabold text-black">Weather App</h1>
+
+    <header class="w-full bg-blue-250 p-4 flex items-center justify-between flex-col ">
+      <h1 class="text-4xl font-extrabold text-black mb-4 "  >Weather App</h1>
       <form id="searchForm" class="flex items-center">
         <input
           type="text"
@@ -48,18 +48,194 @@
       </form>
     </header>
 
-    <!-- Main Content Area -->
-    <div id="app" class="flex w-full h-full">
-      <!-- Current Weather Section -->
+   
+    <div id="app" class="flex w-full h-full flex-col">
+     
       <div
         id="currentWeather"
         class="flex-1 bg-blue-200 p-8 overflow-auto transition-all duration-300"
         style="min-height: 300px"
       >
-        <div id="cityList" class="city-list grid grid-cols-1 gap-4"></div>
+        <div id="cityList" class="city-list grid grid-cols-1 gap-4">
+          <div
+            class="city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition"
+          >
+            <div
+              class="city-main-info flex items-center justify-between w-full"
+            >
+              <div class="flex flex-col items-start">
+                <h2 class="text-3xl font-extrabold mb-2">Johannesburg</h2>
+                <p class="current-date text-lg text-white mb-2"></p>
+                <div class="flex items-center mb-2">
+                  <div class="card-temp text-3xl font-extrabold mr-2"></div>
+                </div>
+                <p class="card-desc text-lg mb-2"></p>
+                <p class="card-wind text-lg"></p>
+                <!-- Save Button -->
+                <button
+                  class="save-button mt-2 px-4 py-2 bg-green-400 text-white rounded hover:bg-green-300 transition"
+                  data-city-name="Johannesburg"
+                >
+                  Save
+                </button>
+              </div>
+              <img src=" " alt="Weather icon" class="card-icon w-20 h-20" />
+            </div>
+          </div>
+          <div
+            class="city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition"
+          >
+            <div
+              class="city-main-info flex items-center justify-between w-full"
+            >
+              <div class="flex flex-col items-start">
+                <h2 class="text-3xl font-extrabold mb-2">Pretoria</h2>
+                <p class="current-date text-lg text-white mb-2"></p>
+                <div class="flex items-center mb-2">
+                  <div class="card-temp text-3xl font-extrabold mr-2"></div>
+                </div>
+                <p class="card-desc text-lg mb-2"></p>
+                <p class="card-wind text-lg"></p>
+                <!-- Save Button -->
+                <button
+                  class="save-button mt-2 px-4 py-2 bg-green-400 text-white rounded hover:bg-green-300 transition"
+                  data-city-name="Pretoria"
+                >
+                  Save
+                </button>
+              </div>
+              <img src=" " alt="Weather icon" class="card-icon w-20 h-20" />
+            </div>
+          </div>
+          <div
+            class="city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition"
+          >
+            <div
+              class="city-main-info flex items-center justify-between w-full"
+            >
+              <div class="flex flex-col items-start">
+                <h2 class="text-3xl font-extrabold mb-2">Rosebank</h2>
+                <p class="current-date text-lg text-white mb-2"></p>
+                <div class="flex items-center mb-2">
+                  <div class="card-temp text-3xl font-extrabold mr-2"></div>
+                </div>
+                <p class="card-desc text-lg mb-2"></p>
+                <p class="card-wind text-lg"></p>
+                <!-- Save Button -->
+                <button
+                  class="save-button mt-2 px-4 py-2 bg-green-400 text-white rounded hover:bg-green-300 transition"
+                  data-city-name="Rosebank"
+                >
+                  Save
+                </button>
+              </div>
+              <img src=" " alt="Weather icon" class="card-icon w-20 h-20" />
+            </div>
+          </div>
+          <div
+            class="city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition"
+          >
+            <div
+              class="city-main-info flex items-center justify-between w-full"
+            >
+              <div class="flex flex-col items-start">
+                <h2 class="text-3xl font-extrabold mb-2">Durban</h2>
+                <p class="current-date text-lg text-white mb-2"></p>
+                <div class="flex items-center mb-2">
+                  <div class="card-temp text-3xl font-extrabold mr-2"></div>
+                </div>
+                <p class="card-desc text-lg mb-2"></p>
+                <p class="card-wind text-lg"></p>
+               
+                <button
+                  class="save-button mt-2 px-4 py-2 bg-green-400 text-white rounded hover:bg-green-300 transition"
+                  data-city-name="Durban"
+                >
+                  Save
+                </button>
+              </div>
+              <img src=" " alt="Weather icon" class="card-icon w-20 h-20" />
+            </div>
+          </div>
+          <div
+            class="city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition"
+          >
+            <div
+              class="city-main-info flex items-center justify-between w-full"
+            >
+              <div class="flex flex-col items-start">
+                <h2 class="text-3xl font-extrabold mb-2">Cape Town</h2>
+                <p class="current-date text-lg text-white mb-2"></p>
+                <div class="flex items-center mb-2">
+                  <div class="card-temp text-3xl font-extrabold mr-2"></div>
+                </div>
+                <p class="card-desc text-lg mb-2"></p>
+                <p class="card-wind text-lg"></p>
+               
+                <button
+                  class="save-button mt-2 px-4 py-2 bg-green-400 text-white rounded hover:bg-green-300 transition"
+                  data-city-name="Cape Town"
+                >
+                  Save
+                </button>
+              </div>
+              <img src=" " alt="Weather icon" class="card-icon w-20 h-20" />
+            </div>
+          </div>
+          <div
+            class="city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition"
+          >
+            <div
+              class="city-main-info flex items-center justify-between w-full"
+            >
+              <div class="flex flex-col items-start">
+                <h2 class="text-3xl font-extrabold mb-2">Pietermaritzburg</h2>
+                <p class="current-date text-lg text-white mb-2"></p>
+                <div class="flex items-center mb-2">
+                  <div class="card-temp text-3xl font-extrabold mr-2"></div>
+                </div>
+                <p class="card-desc text-lg mb-2"></p>
+                <p class="card-wind text-lg"></p>
+               
+                <button
+                  class="save-button mt-2 px-4 py-2 bg-green-400 text-white rounded hover:bg-green-300 transition"
+                  data-city-name="Pietermaritzburg"
+                >
+                  Save
+                </button>
+              </div>
+              <img src=" " alt="Weather icon" class="card-icon w-20 h-20" />
+            </div>
+          </div>
+          <div
+            class="city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition"
+          >
+            <div
+              class="city-main-info flex items-center justify-between w-full"
+            >
+              <div class="flex flex-col items-start">
+                <h2 class="text-3xl font-extrabold mb-2">Port Elizabeth</h2>
+                <p class="current-date text-lg text-white mb-2"></p>
+                <div class="flex items-center mb-2">
+                  <div class="card-temp text-3xl font-extrabold mr-2"></div>
+                </div>
+                <p class="card-desc text-lg mb-2"></p>
+                <p class="card-wind text-lg"></p>
+               
+                <button
+                  class="save-button mt-2 px-4 py-2 bg-green-400 text-white rounded hover:bg-green-300 transition"
+                  data-city-name="Port Elizabeth"
+                >
+                  Save
+                </button>
+              </div>
+              <img src=" " alt="Weather icon" class="card-icon w-20 h-20" />
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Weekly Forecast Section (Hidden by default) -->
+     
       <div
         id="weeklyForecast"
         class="fixed top-0 left-0 w-full h-full bg-white p-8 overflow-auto hidden"
@@ -75,7 +251,21 @@
       </div>
     </div>
 
-    <!-- Map Button -->
+ 
+      <div class="w-full border-t border-gray-300 my-4"></div>
+
+    
+      <div
+        id="savedCitiesSection"
+        class="flex-1 bg-blue-200 p-8 overflow-auto transition-all duration-300"
+        style="min-height: 300px"
+      >
+        <h2 class="text-2xl font-bold mb-4">My Saved Cities</h2>
+        <ul id="placesList" class="list-disc p-4"></ul>
+      </div>
+    </div>
+
+   
     <div id="mapButtonContainer" class="absolute top-4 right-4">
       <a
         href="/map.html"
@@ -85,10 +275,7 @@
       >
     </div>
 
-    <!-- List of Places -->
-    <ul id="placesList" class="list-disc p-4"></ul>
-
-    <!-- Leaflet JavaScript -->
+    
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
@@ -96,7 +283,7 @@
     ></script>
     <script type="module" src="/src/main.ts"></script>
 
-    <!-- Manage Loading Indicator -->
+   
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const loadingIndicator = document.getElementById("loadingIndicator");
@@ -110,10 +297,6 @@
         }
 
         showLoadingIndicator();
-
-        // Call fetchData or other functions as needed
-        // async function fetchData() { ... }
-        // fetchData();
 
         hideLoadingIndicator();
       });
