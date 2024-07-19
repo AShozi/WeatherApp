@@ -52,7 +52,7 @@ async function renderCityList() {
 
     if (weatherData) {
       weatherDataTempElements[i].innerHTML = `${weatherData.temperature}°C`;
-      weatherDataTempElements[
+      weatherWsElements[
         i
       ].innerHTML = `Windspeed: ${weatherData.windspeed} m/s`;
       const weatherIcon = getWeatherIcon(weatherData.weathercode);
