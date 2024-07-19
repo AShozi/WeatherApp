@@ -5,6 +5,7 @@ export interface CurrentWeatherData {
 }
 
 export interface WeeklyWeatherData {
+  weathercode: any;
   time: string[];
   temperature_2m_max: number[];
   temperature_2m_min: number[];
@@ -41,7 +42,7 @@ export async function fetchWeeklyWeather(
 ): Promise<WeeklyWeatherData | null> {
   try {
     const response = await fetch(
-      `${apiUrl}?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min&timezone=auto`
+      `${apiUrl}?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`
     );
     if (!response.ok) {
       throw new Error("Network response was not ok");
@@ -51,6 +52,7 @@ export async function fetchWeeklyWeather(
       time: data.daily.time,
       temperature_2m_max: data.daily.temperature_2m_max,
       temperature_2m_min: data.daily.temperature_2m_min,
+      weathercode: data.daily.weathercode,
     };
   } catch (error) {
     console.error("Error fetching data:", error);
