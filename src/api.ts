@@ -1,22 +1,19 @@
-export interface CurrentWeatherData {
-  temperature: number;
-  windspeed: number;
-  weathercode: number;
-}
-
-export interface WeeklyWeatherData {
-  weathercode: any;
-  time: string[];
-  temperature_2m_max: number[];
-  temperature_2m_min: number[];
-}
+import {
+  ICurrentWeatherDataResponse,
+  IWeeklyWeatherDataResponse,
+} from "./types/apiTypes";
+import {
+  ICurrentWeatherData,
+  ILocation,
+  IWeeklyWeatherData,
+} from "./types/weatherTypes";
 
 const apiUrl = "https://api.open-meteo.com/v1/forecast";
 
 export async function fetchCurrentWeather(
   latitude: number,
   longitude: number
-): Promise<CurrentWeatherData | null> {
+): Promise<ICurrentWeatherData | null> {
   try {
     const response = await fetch(
       `${apiUrl}?latitude=${latitude}&longitude=${longitude}&current_weather=true`
@@ -24,7 +21,7 @@ export async function fetchCurrentWeather(
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    const data = await response.json();
+    const data: ICurrentWeatherDataResponse = await response.json();
     return {
       temperature: data.current_weather.temperature,
       windspeed: data.current_weather.windspeed,
@@ -39,7 +36,7 @@ export async function fetchCurrentWeather(
 export async function fetchWeeklyWeather(
   latitude: number,
   longitude: number
-): Promise<WeeklyWeatherData | null> {
+): Promise<IWeeklyWeatherData | null> {
   try {
     const response = await fetch(
       `${apiUrl}?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`
@@ -47,7 +44,7 @@ export async function fetchWeeklyWeather(
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
-    const data = await response.json();
+    const data: IWeeklyWeatherDataResponse = await response.json();
     return {
       time: data.daily.time,
       temperature_2m_max: data.daily.temperature_2m_max,
@@ -60,12 +57,21 @@ export async function fetchWeeklyWeather(
   }
 }
 
-export const cities = [
-  { name: "Johannesburg", latitude: -26.2041, longitude: 28.0473 },
-  { name: "Pretoria", latitude: -25.7479, longitude: 28.2293 },
-  { name: "Rosebank", latitude: -26.1438, longitude: 28.0415 },
-  { name: "Durban", latitude: -29.8587, longitude: 31.0218 },
-  { name: "Cape Town", latitude: -33.9249, longitude: 18.4241 },
-  { name: "Pietermaritzburg", latitude: -29.6006, longitude: 30.3794 },
-  { name: "Port Elizabeth", latitude: -33.918, longitude: 25.5701 },
-];
+export function getPlaces(): ILocation[] {
+  const placesJson = localStorage.getItem("places");
+  return placesJson ? JSON.parse(placesJson) : [];
+}
+
+export function addToPlaces(place: ILocation) {
+  const places = getPlaces();
+  places.push(place);
+  localStorage.setItem("places", JSON.stringify(places));
+}
+
+export function removePlace(placeName: string) {
+  let places = getPlaces();
+  places = places.filter(
+    (place: ILocation) => place.locationName !== placeName
+  );
+  localStorage.setItem("places", JSON.stringify(places));
+}
