@@ -98,7 +98,10 @@ function formatDay(date: Date): string {
 
 async function renderCityList() {
   const cityListElement = document.getElementById("cityList");
-  if (!cityListElement) return;
+  const loadingIndicator = document.getElementById("loadingIndicator");
+  if (!cityListElement || !loadingIndicator) return;
+
+  loadingIndicator.classList.remove("hidden");
 
   const currentDate = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -118,25 +121,21 @@ async function renderCityList() {
 
       const cityCard = document.createElement("div");
       cityCard.className =
-        "city-card p-6 bg-blue-800 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition";
+        "city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition";
       cityCard.innerHTML = `
              <div class="flex items-center justify-between w-full">
           <div class="flex flex-col items-start">
-            <h2 class="text-3xl text-white font-extrabold mb-2">${
-              city.name
-            }</h2>
-            <p class="text-lg text-gray-400 mb-2">${currentDate}</p>
+            <h2 class="text-3xl font-extrabold mb-2">${city.name}</h2>
+            <p class="text-lg text-white mb-2">${currentDate}</p>
             <div class="flex items-center mb-2">
-              <div class="text-3xl text-white font-extrabold mr-2">${
+              <div class="text-3xl font-extrabold mr-2">${
                 weatherData.temperature
               }°C</div>
             </div>
-            <p class="text-lg text-white mb-2">${
+            <p class="text-lg mb-2">${
               weatherDescriptions[weatherData.weathercode]
             }</p>
-            <p class="text-lg text-white">Windspeed: ${
-              weatherData.windspeed
-            } m/s</p>
+            <p class="text-lg">Windspeed: ${weatherData.windspeed} m/s</p>
           </div>
           <img src="${weatherIcon}" alt="Weather icon" class="w-20 h-20" />
         </div>
@@ -148,6 +147,7 @@ async function renderCityList() {
       cityListElement.appendChild(cityCard);
     }
   }
+  loadingIndicator.classList.add("hidden");
 }
 
 async function showWeeklyForecast(
@@ -157,10 +157,14 @@ async function showWeeklyForecast(
 ) {
   const cityListElement = document.getElementById("cityList");
   const weeklyForecastElement = document.getElementById("weeklyForecast");
-  if (!cityListElement || !weeklyForecastElement) return;
+  const loadingIndicator = document.getElementById("loadingIndicator");
+
+  if (!cityListElement || !weeklyForecastElement || !loadingIndicator) return;
 
   cityListElement.classList.add("hidden");
   weeklyForecastElement.classList.remove("hidden");
+
+  loadingIndicator.classList.remove("hidden");
 
   const backButton = document.getElementById("backButton");
   if (backButton) {
@@ -180,25 +184,57 @@ async function showWeeklyForecast(
     data.time.forEach((time, index) => {
       const date = new Date(time);
       const dayFormatted = formatDay(date);
-      const weatherCode = data.temperature_2m_max[index];
+      const weatherCode = data.weathercode[index];
       const weatherDescription =
         weatherDescriptions[weatherCode] || "Unknown weather";
       const weatherIcon = getWeatherIcon(weatherCode);
 
-      forecastHtml += `<li class="p-2 bg-blue-300 rounded-lg shadow-sm">
-        <img src="${weatherIcon}" alt="Weather icon" class="w-10 h-10 inline-block mr-2" />
-        <strong>${dayFormatted}:</strong> 
-        <strong>Max Temp:</strong> ${data.temperature_2m_max[index]} °C, 
-        <strong>Min Temp:</strong> ${data.temperature_2m_min[index]} °C, 
-        <strong>Weather:</strong> ${weatherDescription}
-      </li>`;
+      const tempRange = 30;
+
+      const tempDifference =
+        data.temperature_2m_max[index] - data.temperature_2m_min[index];
+      const progressBarWidth = (tempDifference / tempRange) * 100;
+
+      forecastHtml += `
+        <li class="p-4 bg-blue-300 rounded-lg shadow-sm flex items-start">
+          <img src="${weatherIcon}" alt="Weather icon" class="w-16 h-16 mr-4" />
+          <div class="flex flex-col flex-grow">
+            <h3 class="text-xl font-semibold text-gray-800 mb-1">${dayFormatted}</h3>
+            <p class="text-lg text-gray-700 mb-1">${weatherDescription}</p>
+          </div>
+          <div class="flex flex-col ml-4">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-lg text-gray-700"><strong></strong> ${data.temperature_2m_min[index]} °C</p>
+              <p class="text-lg text-gray-700"><strong></strong> ${data.temperature_2m_max[index]} °C</p>
+            </div>
+            <!-- Progress Bar Container -->
+            <div class="relative w-32 h-2 bg-gray-300 rounded-lg">
+              <!-- Fill Element -->
+              <div
+                class="absolute h-full bg-blue-500 rounded-lg"
+                style="width: ${progressBarWidth}%"
+              ></div>
+            </div>
+          </div>
+        </li>`;
     });
     forecastHtml += "</ul>";
 
     forecastElement.innerHTML = forecastHtml;
   }
+  loadingIndicator.classList.add("hidden");
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderCityList();
+document.addEventListener("DOMContentLoaded", async () => {
+  const loadingIndicator = document.getElementById("loadingIndicator");
+
+  if (loadingIndicator) {
+    loadingIndicator.classList.remove("hidden"); // Show loading indicator
+  }
+
+  await renderCityList(); // Fetch and display city data
+
+  if (loadingIndicator) {
+    loadingIndicator.classList.add("hidden"); // Hide loading indicator
+  }
 });
