@@ -13,14 +13,32 @@
   <body
     class="bg-blue-200 text-gray-800 min-h-screen flex flex-col items-center justify-center"
   >
-    <!-- Button at the top right corner -->
+    <!-- Header with Search Bar -->
+    <header class="w-full bg-blue-950 p-4 flex items-center justify-between">
+      <h1 class="text-4xl font-extrabold text-white">Weather App</h1>
+      <form id="searchForm" class="flex items-center">
+        <input
+          type="text"
+          id="searchBar"
+          class="p-2 rounded-l-lg border-2 border-gray-300"
+          placeholder="Enter City"
+        />
+        <button
+          type="submit"
+          class="p-2 bg-blue-400 text-white rounded-r-lg hover:bg-blue-300 transition"
+        >
+          Search
+        </button>
+      </form>
+    </header>
+
+    <!-- Main Content Area -->
     <div id="app" class="flex w-full h-full">
       <!-- Current Weather Section -->
       <div
         id="currentWeather"
-        class="flex-1 bg-blue-300 p-8 overflow-auto transition-all duration-300"
+        class="flex-1 bg-blue-950 p-8 overflow-auto transition-all duration-300"
       >
-        <h1 class="text-4xl font-extrabold mb-6 text-gray-900">Weather App</h1>
         <div id="cityList" class="city-list grid grid-cols-1 gap-4"></div>
       </div>
 
