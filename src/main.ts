@@ -37,6 +37,54 @@ const weatherDescriptions: { [key: number]: string } = {
   99: "Thunderstorm with heavy hail",
 };
 
+function getWeatherIcon(weatherCode: number): string {
+  switch (weatherCode) {
+    case 0:
+      return "./assets/sun.png";
+    case 1:
+    case 2:
+    case 3:
+      return "./assets/partly-cloudy.png";
+    case 45:
+    case 48:
+      return "./assets/cloud.png";
+    case 51:
+    case 53:
+    case 55:
+      return "./assets/rain.png";
+    case 56:
+    case 57:
+      return "./assets/rain.png";
+    case 61:
+    case 63:
+    case 65:
+      return "./assets/rainy-day.png";
+    case 66:
+    case 67:
+      return "./assets/rain freeze.png";
+    case 71:
+    case 73:
+    case 75:
+      return "./assets/snowy.png";
+    case 77:
+      return "./assets/snowy grains.png";
+    case 80:
+    case 81:
+    case 82:
+      return "./assets/rainy shower.png";
+    case 85:
+    case 86:
+      return "./assets/snow.png";
+    case 95:
+      return "./assets/storm.png";
+    case 96:
+    case 99:
+      return "./assets/hail.png";
+    default:
+      return "./assets/sun.png";
+  }
+}
+
 function formatDay(date: Date): string {
   const today = new Date();
   const dayOfWeek = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -52,6 +100,13 @@ async function renderCityList() {
   const cityListElement = document.getElementById("cityList");
   if (!cityListElement) return;
 
+  const currentDate = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   for (const city of cities) {
     const weatherData = await fetchCurrentWeather(
       city.latitude,
@@ -59,19 +114,24 @@ async function renderCityList() {
     );
 
     if (weatherData) {
+      const weatherIcon = getWeatherIcon(weatherData.weathercode);
+
       const cityCard = document.createElement("div");
       cityCard.className =
         "city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition";
       cityCard.innerHTML = `
         <div class="flex flex-col items-center">
-          <h2 class="text-2xl font-bold mb-2">${city.name}</h2>
-          <div class="text-6xl font-extrabold mb-2">${
+          <h2 class="text-3xl font-extrabold mb-2">${city.name}</h2>
+           <p class="text-lg mb-2">${currentDate}</p>
+          <img src="${weatherIcon}" alt="Weather icon" class="w-20 h-20 mb-2" />
+          <div class="text-3xl font-bold mb-2">${
             weatherData.temperature
           }°C</div>
+             <p class="text-lg"> ${
+               weatherDescriptions[weatherData.weathercode]
+             }</p>
           <p class="text-lg">Windspeed: ${weatherData.windspeed} m/s</p>
-          <p class="text-lg">Weather: ${
-            weatherDescriptions[weatherData.weathercode]
-          }</p>
+       
         </div>
       `;
       cityCard.addEventListener("click", () =>
@@ -115,8 +175,10 @@ async function showWeeklyForecast(
       const weatherCode = data.temperature_2m_max[index];
       const weatherDescription =
         weatherDescriptions[weatherCode] || "Unknown weather";
+      const weatherIcon = getWeatherIcon(weatherCode);
 
       forecastHtml += `<li class="p-2 bg-blue-300 rounded-lg shadow-sm">
+        <img src="${weatherIcon}" alt="Weather icon" class="w-10 h-10 inline-block mr-2" />
         <strong>${dayFormatted}:</strong> 
         <strong>Max Temp:</strong> ${data.temperature_2m_max[index]} °C, 
         <strong>Min Temp:</strong> ${data.temperature_2m_min[index]} °C, 
