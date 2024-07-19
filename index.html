@@ -2,28 +2,50 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Weather App</title>
     <link href="/src/styles.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body
-    class="bg-blue-200 text-gray-800 min-h-screen flex items-center justify-center"
+    class="bg-blue-200 text-gray-800 min-h-screen flex flex-col items-center justify-center"
   >
+    <!-- Header with Search Bar -->
+    <header class="w-full bg-blue-950 p-4 flex items-center justify-between">
+      <h1 class="text-4xl font-extrabold text-white">Weather App</h1>
+      <form id="searchForm" class="flex items-center">
+        <input
+          type="text"
+          id="searchBar"
+          class="p-2 rounded-l-lg border-2 border-gray-300"
+          placeholder="Enter City"
+        />
+        <button
+          type="submit"
+          class="p-2 bg-blue-400 text-white rounded-r-lg hover:bg-blue-300 transition"
+        >
+          Search
+        </button>
+      </form>
+    </header>
+
+    <!-- Main Content Area -->
     <div id="app" class="flex w-full h-full">
       <!-- Current Weather Section -->
       <div
         id="currentWeather"
-        class="flex-1 bg-blue-300 p-8 overflow-auto transition-all duration-300"
+        class="flex-1 bg-blue-950 p-8 overflow-auto transition-all duration-300"
       >
-        <h1 class="text-4xl font-extrabold mb-6 text-gray-900">Weather App</h1>
         <div id="cityList" class="city-list grid grid-cols-1 gap-4"></div>
       </div>
 
-      <!-- Weekly Forecast Section -->
+      <!-- Weekly Forecast Section (Hidden by default) -->
       <div
         id="weeklyForecast"
-        class="flex-1 bg-blue-200 hidden p-8 overflow-auto transition-all duration-300"
+        class="fixed top-0 left-0 w-full h-full bg-white p-8 overflow-auto hidden"
       >
         <button
           id="backButton"
@@ -33,7 +55,28 @@
         </button>
         <div id="forecast" class="forecast-content"></div>
       </div>
+      <!-- End of Weekly Forecast Section -->
     </div>
+
+    <!-- Map Button -->
+    <div id="mapButtonContainer" class="absolute top-4 right-4">
+      <a
+        href="/map.html"
+        id="mapButton"
+        class="px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-300 transition"
+      >
+        Map
+      </a>
+    </div>
+
+    <!-- Leaflet JavaScript -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <!-- Load main.ts script to render cities -->
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
