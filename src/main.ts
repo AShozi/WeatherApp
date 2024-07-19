@@ -180,18 +180,39 @@ async function showWeeklyForecast(
     data.time.forEach((time, index) => {
       const date = new Date(time);
       const dayFormatted = formatDay(date);
-      const weatherCode = data.temperature_2m_max[index];
+      const weatherCode = data.weathercode[index];
       const weatherDescription =
         weatherDescriptions[weatherCode] || "Unknown weather";
       const weatherIcon = getWeatherIcon(weatherCode);
 
-      forecastHtml += `<li class="p-2 bg-blue-300 rounded-lg shadow-sm">
-        <img src="${weatherIcon}" alt="Weather icon" class="w-10 h-10 inline-block mr-2" />
-        <strong>${dayFormatted}:</strong> 
-        <strong>Max Temp:</strong> ${data.temperature_2m_max[index]} °C, 
-        <strong>Min Temp:</strong> ${data.temperature_2m_min[index]} °C, 
-        <strong>Weather:</strong> ${weatherDescription}
-      </li>`;
+      const tempRange = 30;
+
+      const tempDifference =
+        data.temperature_2m_max[index] - data.temperature_2m_min[index];
+      const progressBarWidth = (tempDifference / tempRange) * 100;
+
+      forecastHtml += `
+        <li class="p-4 bg-blue-300 rounded-lg shadow-sm flex items-start">
+          <img src="${weatherIcon}" alt="Weather icon" class="w-16 h-16 mr-4" />
+          <div class="flex flex-col flex-grow">
+            <h3 class="text-xl font-semibold text-gray-800 mb-1">${dayFormatted}</h3>
+            <p class="text-lg text-gray-700 mb-1">${weatherDescription}</p>
+          </div>
+          <div class="flex flex-col ml-4">
+            <div class="flex items-center justify-between mb-2">
+              <p class="text-lg text-gray-700"><strong></strong> ${data.temperature_2m_min[index]} °C</p>
+              <p class="text-lg text-gray-700"><strong></strong> ${data.temperature_2m_max[index]} °C</p>
+            </div>
+            <!-- Progress Bar Container -->
+            <div class="relative w-32 h-2 bg-gray-300 rounded-lg">
+              <!-- Fill Element -->
+              <div
+                class="absolute h-full bg-blue-500 rounded-lg"
+                style="width: ${progressBarWidth}%"
+              ></div>
+            </div>
+          </div>
+        </li>`;
     });
     forecastHtml += "</ul>";
 
