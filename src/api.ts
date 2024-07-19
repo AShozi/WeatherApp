@@ -1,3 +1,8 @@
+interface Location {
+  name: string;
+  latitude: number;
+  longitude: number;
+}
 export interface CurrentWeatherData {
   temperature: number;
   windspeed: number;
@@ -69,3 +74,23 @@ export const cities = [
   { name: "Pietermaritzburg", latitude: -29.6006, longitude: 30.3794 },
   { name: "Port Elizabeth", latitude: -33.918, longitude: 25.5701 },
 ];
+
+// Function to get places from local storage
+export function getPlaces(): Location[] {
+  const placesJson = localStorage.getItem("places");
+  return placesJson ? JSON.parse(placesJson) : [];
+}
+
+// Function to add a place to local storage
+export function addToPlaces(place: Location) {
+  const places = getPlaces();
+  places.push(place);
+  localStorage.setItem("places", JSON.stringify(places));
+}
+
+// Function to remove a place from local storage
+export function removePlace(placeName: string) {
+  let places = getPlaces();
+  places = places.filter((place: Location) => place.name !== placeName);
+  localStorage.setItem("places", JSON.stringify(places));
+}

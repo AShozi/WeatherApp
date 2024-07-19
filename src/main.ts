@@ -4,6 +4,9 @@ import {
   cities,
   CurrentWeatherData,
   WeeklyWeatherData,
+  getPlaces, // Importing getPlaces function
+  addToPlaces,
+  removePlace,
 } from "./api";
 
 const weatherDescriptions: { [key: number]: string } = {
@@ -123,7 +126,7 @@ async function renderCityList() {
       cityCard.className =
         "city-card p-6 bg-blue-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-blue-300 transition";
       cityCard.innerHTML = `
-             <div class="flex items-center justify-between w-full">
+     <div class="flex items-center justify-between w-full">
           <div class="flex flex-col items-start">
             <h2 class="text-3xl font-extrabold mb-2">${city.name}</h2>
             <p class="text-lg text-white mb-2">${currentDate}</p>
@@ -136,6 +139,13 @@ async function renderCityList() {
               weatherDescriptions[weatherData.weathercode]
             }</p>
             <p class="text-lg">Windspeed: ${weatherData.windspeed} m/s</p>
+            <!-- Save Button -->
+            <button
+              class="save-button mt-2 px-4 py-2 bg-green-400 text-white rounded hover:bg-green-300 transition"
+              data-city-name="${city.name}"
+            >
+              Save
+            </button>
           </div>
           <img src="${weatherIcon}" alt="Weather icon" class="w-20 h-20" />
         </div>
@@ -147,6 +157,59 @@ async function renderCityList() {
       cityListElement.appendChild(cityCard);
     }
   }
+  // Add event listener for save buttons
+  document.querySelectorAll(".save-button").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const cityName = (event.target as HTMLButtonElement).dataset.cityName;
+      if (cityName) {
+        const city = cities.find((city) => city.name === cityName);
+        if (city) {
+          addToPlaces(city);
+          alert(`${cityName} has been saved!`);
+        }
+      }
+    });
+  });
+  // loadingIndicator.classList.add("hidden");
+  // Render cities from local storage at the bottom with different styling
+  const places = getPlaces();
+  for (const place of places) {
+    const weatherData = await fetchCurrentWeather(
+      place.latitude,
+      place.longitude
+    );
+
+    if (weatherData) {
+      const weatherIcon = getWeatherIcon(weatherData.weathercode);
+
+      const cityCard = document.createElement("div");
+      cityCard.className =
+        "city-card p-6 bg-green-400 text-gray-800 rounded-lg cursor-pointer shadow-lg hover:bg-green-300 transition";
+      cityCard.innerHTML = `
+          <div class="flex items-center justify-between w-full">
+            <div class="flex flex-col items-start">
+              <h2 class="text-3xl font-extrabold mb-2">${place.name}</h2>
+              <p class="text-lg text-white mb-2">${currentDate}</p>
+              <div class="flex items-center mb-2">
+                <div class="text-3xl font-extrabold mr-2">${
+                  weatherData.temperature
+                }°C</div>
+              </div>
+              <p class="text-lg mb-2">${
+                weatherDescriptions[weatherData.weathercode]
+              }</p>
+              <p class="text-lg">Windspeed: ${weatherData.windspeed} m/s</p>
+            </div>
+            <img src="${weatherIcon}" alt="Weather icon" class="w-20 h-20" />
+          </div>
+        `;
+      cityCard.addEventListener("click", () =>
+        showWeeklyForecast(place.name, place.latitude, place.longitude)
+      );
+      cityListElement.appendChild(cityCard);
+    }
+  }
+
   loadingIndicator.classList.add("hidden");
 }
 

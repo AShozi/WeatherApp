@@ -2,27 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
-
-    <!-- Preload Critical CSS -->
     <link rel="preload" href="/src/styles.css" as="style" />
-
-    <!-- Inline Critical CSS for Initial Render -->
     <style>
       body {
         background-color: #e2e8f0; /* Example background color */
       }
-      /* Add other critical styles here */
     </style>
-
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Main CSS -->
     <link href="/src/styles.css" rel="stylesheet" />
   </head>
   <body
@@ -97,14 +85,15 @@
       >
     </div>
 
+    <!-- List of Places -->
+    <ul id="placesList" class="list-disc p-4"></ul>
+
     <!-- Leaflet JavaScript -->
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
-
-    <!-- Load main.ts script to render cities -->
     <script type="module" src="/src/main.ts"></script>
 
     <!-- Manage Loading Indicator -->
@@ -120,24 +109,13 @@
           loadingIndicator.classList.add("hidden");
         }
 
-        // Show loading indicator on page load
         showLoadingIndicator();
 
-        // Example fetch function
-        async function fetchData() {
-          try {
-            const response = await fetch("YOUR_API_URL");
-            const data = await response.json();
-            // Process and render data
-            // Example: renderData(data);
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          } finally {
-            hideLoadingIndicator();
-          }
-        }
+        // Call fetchData or other functions as needed
+        // async function fetchData() { ... }
+        // fetchData();
 
-        fetchData();
+        hideLoadingIndicator();
       });
     </script>
   </body>
