@@ -1,10 +1,5 @@
-import {
-  fetchCurrentWeather,
-  fetchWeeklyWeather,
-  cities,
-  CurrentWeatherData,
-  WeeklyWeatherData,
-} from "./api";
+import { fetchCurrentWeather, fetchWeeklyWeather } from "./api";
+import { cities } from "./utils";
 
 const weatherDescriptions: { [key: number]: string } = {
   0: "Clear sky",
